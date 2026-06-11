@@ -24,6 +24,22 @@ npx skills add akronb/agent-skills -a claude-code -a cursor
 | Skill | Description |
 | ----- | ----------- |
 | [`worktree-setup`](skills/worktree-setup/) | Create an isolated git worktree for a branch, copy gitignored env files (`.env`, `.env.local`, …) from the main checkout into it, and install dependencies. |
+| [`execute`](skills/execute/) | Execute a handoff document in an isolated worktree with strict TDD, then write a completion report; includes a review mode for the planning session. Composes with `worktree-setup`. |
+
+## Composition
+
+Skills stay self-contained, but may **soft-depend** on a sibling skill: invoke it if
+installed, else locate its bundled script by path pattern (see `execute` step 2). One
+source of truth, no copied scripts.
+
+The intended flow with `execute`:
+
+1. Plan in a full-strength session; finish with `/handoff` (a handoff file lands in the temp dir).
+2. Launch a cheap executor: `claude --model haiku "/execute <handoff-path>"`. It sets up a
+   worktree via `worktree-setup`, implements with TDD, commits on the branch, writes
+   `<handoff-path>.report.md`.
+3. Back in the planning session: "review the execution at <report-path>" → APPROVE / REVISE
+   (max 2 rounds) / BLOCK. Merging and pushing stay with you.
 
 ## Layout
 
@@ -32,6 +48,7 @@ agent-skills/
 └── skills/
     └── <skill-name>/
         ├── SKILL.md        # name + description frontmatter, agent-agnostic instructions
+        ├── references/     # detailed docs loaded on demand, one level deep
         └── scripts/        # bundled scripts, referenced relative to SKILL.md
 ```
 
