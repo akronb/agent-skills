@@ -24,7 +24,7 @@ Always get today's date with `date +%Y-%m-%d` — never hard-code it.
 ```markdown
 ---
 id: ISSUE-0014
-title: Fix auth redirect loop
+title: "Fix auth redirect loop"
 status: todo
 priority: medium
 created: 2026-06-22
@@ -35,7 +35,7 @@ tags: [bug, api]
 <body — context, checklist, links>
 ```
 
-- **title** — short summary; shown on the Bases board
+- **title** — short summary; shown on the Bases board. **Always wrap it in double quotes** (escaping any embedded `"`) — titles often contain `:` or `#`, which break unquoted YAML and leave the note unparseable, so it never appears on the board.
 - **status** — one of `todo` · `in-progress` · `blocked` · `done`
 - **priority** — one of `low` · `medium` · `high`
 - **tags** — optional; `[]` if none
@@ -53,10 +53,10 @@ Changing status, closing, and archiving are not here — they happen during impl
 
 1. Resolve `<vault>` and `<repo>`; create the issues dir if missing.
 2. **Compute the next ID:** list `ISSUE-*.md` across **both** the active dir **and** `archive/`, take the highest number, add 1, zero-pad to 4 digits. Spanning the archive guarantees IDs are never reused.
-3. Write `ISSUE-NNNN.md`: `title` from the request, `status: todo`, `priority` from the request (default `medium`), `created` and `updated` set to today, `tags` from the request. Leave the body for notes.
+3. Write `ISSUE-NNNN.md`: `title` (double-quoted) from the request, `status: todo`, `priority` from the request (default `medium`), `created` and `updated` set to today, `tags` from the request. Leave the body for notes.
 4. Print the new ID and full path.
 
-**Done when:** the file exists with valid frontmatter and its ID is exactly one above the prior max across active + archive.
+**Done when:** the file's frontmatter is parseable YAML (title quoted) and its ID is exactly one above the prior max across active + archive.
 
 ### List
 
