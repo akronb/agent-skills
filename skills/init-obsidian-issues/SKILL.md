@@ -33,14 +33,11 @@ filters:
     - file.inFolder("projects/<repo>/issues")
     - not:
         - file.inFolder("projects/<repo>/issues/archive")
-formulas:
-  prio_rank: 'if(priority == "high", 1, if(priority == "medium", 2, 3))'
-  status_order: 'if(status == "todo", "1 To Do", if(status == "in-progress", "2 In Progress", if(status == "blocked", "3 Blocked", "4 Done")))'
 views:
   - type: table
     name: Open Issues
     groupBy:
-      property: formula.status_order
+      property: status
       direction: ASC
     order:
       - file.name
@@ -48,11 +45,8 @@ views:
       - status
       - priority
       - tags
-    sort:
-      - property: formula.prio_rank
-        direction: ASC
 ```
 
 Folder paths are vault-relative. The `not:` clause keeps closed issues off the board. **Negation must be the structural `not:` key** (or a quoted inline `'!file.inFolder(...)'`) — a bare inline `not file.inFolder(...)` is not a valid Bases expression and silently empties the view.
 
-**Enum ordering.** Bases sorts a column by its raw text, so `priority` (high/medium/low) and `status` would sort alphabetically. The `prio_rank` / `status_order` formulas exist only to sort and group in logical order; the readable `status`/`priority` columns stay clean. Trade-off: clicking a raw column header re-sorts it alphabetically and overrides the formula sort — change ordering by editing this config, not by clicking headers.
+**Enum ordering.** Bases sorts a column by its raw text, so `priority` (high/medium/low) and `status` sort alphabetically, not logically. Filter the view for the priority/status you want rather than relying on column sort.
