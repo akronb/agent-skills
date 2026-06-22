@@ -1,14 +1,14 @@
 ---
 name: to-obsidian-issues
-description: Track work issues as Obsidian notes — create, list, update status, and close/archive per-repo issues in the Obsidian vault under ~/obsidian.
+description: Capture work issues as Obsidian notes — create and list per-repo issues in the Obsidian vault under ~/obsidian.
 disable-model-invocation: true
 ---
 
 # To Obsidian Issues
 
-Track issues for the current repo as Markdown notes in the Obsidian vault. **The frontmatter is the single source of truth** — every operation reads and writes it; never infer an issue's state from anything else.
+Capture and list issues for the current repo as Markdown notes in the Obsidian vault. **The frontmatter is the single source of truth** — never infer an issue's state from anything else.
 
-Run `/init-obsidian-issues` once per repo first — it scaffolds the folders and the Bases board.
+Run `/init-obsidian-issues` once per repo first — it scaffolds the folders and the Bases board. To drive an issue through implementation — set it in-progress, build it, and archive it done — use **`/execute-obsidian-issue`**, which owns the status lifecycle.
 
 ## Locations
 
@@ -42,14 +42,12 @@ tags: [bug, api]
 
 ## Operation
 
-Read the argument and pick exactly one branch by intent. The verb (or its absence) routes:
+Read the argument and pick a branch by intent:
 
 - a title / "create" / "new" / a bug description → **Create**
 - "list" / "show" / "open" / a status filter → **List**
-- an ID + a new status → **Update**
-- "close" / "done" / "archive" + an ID → **Close**
 
-If the argument is ambiguous between branches, ask which one.
+Changing status, closing, and archiving are not here — they happen during implementation via **`/execute-obsidian-issue`**.
 
 ### Create
 
@@ -67,18 +65,3 @@ If the argument is ambiguous between branches, ask which one.
 3. Print a table — `ID · title · status · priority · tags` — sorted by priority (high→low) then ID. For a live grouped view, open `issues.base` in Obsidian.
 
 **Done when:** every active issue file appears in the table or is excluded by the stated filter — none silently dropped.
-
-### Update
-
-1. Locate `ISSUE-NNNN.md` (active dir; if absent, check `archive/`).
-2. Set `status` to the requested value (must be in the allowed set — reject anything else) and bump `updated` to today.
-
-**Done when:** frontmatter `status` shows the new value and `updated` is today.
-
-### Close
-
-1. Locate the issue in the active dir.
-2. Set `status: done`, add `closed: <today>`, bump `updated`.
-3. Create `archive/` if missing and move the file there.
-
-**Done when:** the file is gone from the active dir and present in `archive/` with `status: done` and a `closed` date.

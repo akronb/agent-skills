@@ -27,7 +27,9 @@ Read it fully. If it references PRDs, plans, ADRs, or issues by path or URL, rea
 ### 2. Set up the worktree
 
 Derive a branch name: the branch named in the handoff if there is one, else
-`execute/<handoff-file-slug>`.
+`<type>/<slug>` — a Conventional-Commits-style type that matches the work (`feat`, `fix`,
+`chore`, `refactor`, `perf`, `docs`, …) and a short slug from the handoff title. Match the
+project's existing branch convention; don't invent an `execute/` prefix.
 
 - If the **worktree-setup** skill is installed, invoke it.
 - Otherwise locate its bundled script and run it directly:
