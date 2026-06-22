@@ -30,8 +30,9 @@ One-time setup so `/to-obsidian-issues` works for the current repo: scaffold the
 ```yaml
 filters:
   and:
-    - 'file.inFolder("projects/<repo>/issues")'
-    - 'not file.inFolder("projects/<repo>/issues/archive")'
+    - file.inFolder("projects/<repo>/issues")
+    - not:
+        - file.inFolder("projects/<repo>/issues/archive")
 views:
   - type: table
     name: Open Issues
@@ -45,4 +46,4 @@ views:
       - tags
 ```
 
-Folder paths are vault-relative. The `not file.inFolder(...archive)` clause keeps closed issues off the board.
+Folder paths are vault-relative. The `not:` clause keeps closed issues off the board. **Negation must be the structural `not:` key** (or a quoted inline `'!file.inFolder(...)'`) — a bare inline `not file.inFolder(...)` is not a valid Bases expression and silently empties the view.
