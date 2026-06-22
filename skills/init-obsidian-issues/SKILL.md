@@ -40,6 +40,7 @@ views:
       property: status
       direction: ASC
     order:
+      - file.name
       - title
       - status
       - priority
